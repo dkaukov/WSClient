@@ -4,7 +4,10 @@
 
 #include <QTcpSocket>
 #include <QDebug>
-
+#include <QThread>
+#include <QMetaEnum>
+#include <QAbstractSocket>
+#include <QString>
 
 class Client : public QObject
 {
@@ -15,12 +18,13 @@ public:
 
     void init();
     QString hostIP = "127.0.0.1";
-    int hostPort = 40001;
+    quint16 hostPort = 40001;
 signals:
     void failed();
 
 public slots:
     void sendMsg1();
+    //void run(); // this is for multithread
 
 private slots:
 
@@ -29,5 +33,5 @@ private slots:
     void clientReadData();
 
 private:
-    WebSocket::Wrapper *ws_wrapper = nullptr;
+    WebSocket::Wrapper* ws_wrapper = nullptr;
 };

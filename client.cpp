@@ -8,7 +8,8 @@ Client::Client(QObject *parent) : QObject(parent)
 
 Client::~Client()
 {
-    qDebug() << "client ended and deleted";
+    qInfo() << Q_FUNC_INFO << QThread::currentThread();
+    qInfo() << "client deconstructed";
 }
 
 void Client::init()
@@ -46,6 +47,7 @@ void Client::init()
 
 void Client::handshakeSucceed()
 {
+    qInfo() << Q_FUNC_INFO << QThread::currentThread();
     qDebug() << "ws connected";
     // sends below config message immediately after handshake
     const QString msg  = QString("volume:-5;");
@@ -53,19 +55,21 @@ void Client::handshakeSucceed()
 
     // seems like I need to create while loop here for further config messages
     // something like
-    //while (ws_wrapper->connected()){
+    //while (&WebSocket::Wrapper::connected){
     //
     //}
 }
 
 void Client::handshakeFailed(const QString & reason)
 {
+    qInfo() << Q_FUNC_INFO << QThread::currentThread();
     qDebug() << "ws error: " << reason;
     emit failed();
 }
 
 void Client::clientReadData()
 {
+    qInfo() << Q_FUNC_INFO << QThread::currentThread();
     while (ws_wrapper->messagesAvailable() > 0) {
         auto msg = ws_wrapper->readNextMessage();
         qDebug() << "Msg received:" << QString::fromUtf8(msg);
@@ -73,6 +77,12 @@ void Client::clientReadData()
 }
 
 void Client::sendMsg1(){
+    qInfo() << Q_FUNC_INFO << QThread::currentThread();
     const QString msg  = QString("volume:-10;");
     ws_wrapper->write(msg.toUtf8());
 }
+
+//void Client::run()
+//{
+//    //Thread is running the code here.
+//}
