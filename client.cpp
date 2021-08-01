@@ -14,6 +14,8 @@ Client::~Client()
 
 void Client::init()
 {
+    qInfo() << "starting Init";
+
     // create the to-be-wrapped socket (this is the real socket)
     QTcpSocket *socket = new QTcpSocket(this);
     connect(socket, &QTcpSocket::connected, this, [this, socket]
@@ -33,6 +35,7 @@ void Client::init()
         // Handling the Failure and Disconned below
         connect(ws_wrapper, &WebSocket::Wrapper::handshakeFailed, this, &Client::handshakeFailed);
         connect(ws_wrapper, &WebSocket::Wrapper::disconnected, this, &Client::failed);
+        connect(ws_wrapper,&QTcpSocket::errorOccurred,this, &Client::tcpHandshakeError);
 
         // Reading data from ws server
         connect(ws_wrapper, &WebSocket::Wrapper::messagesReady, this ,&Client::clientReadData);
@@ -64,6 +67,13 @@ void Client::handshakeFailed(const QString & reason)
 {
     qInfo() << Q_FUNC_INFO << QThread::currentThread();
     qDebug() << "ws error: " << reason;
+    emit failed();
+}
+
+void Client::tcpHandshakeError(QAbstractSocket::SocketError socketError)
+{
+    qInfo() << Q_FUNC_INFO << QThread::currentThread();
+    qInfo() << "Error:" << socketError << " " << ws_wrapper->errorString();
     emit failed();
 }
 
