@@ -21,6 +21,8 @@ public:
     quint16 hostPort = 40001;
 signals:
     void failed();
+    void tcpSocketFailed();
+    void tcpSocketError();
 
 public slots:
     void sendMsg1();

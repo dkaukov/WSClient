@@ -18,11 +18,14 @@ void Client::init()
     // create the to-be-wrapped socket (this is the real socket)
     QTcpSocket *socket = new QTcpSocket(this);
     connect(socket, &QTcpSocket::errorOccurred,this,&Client::error);
+    // below is the duplicate of void Client::error to check if there is any difference
     if (&QTcpSocket::errorOccurred) {
         qInfo() << Q_FUNC_INFO << QThread::currentThread();
         qInfo() << "TcpSocket Error:" << socket->errorString();
         qInfo() << "TcpSocket Error - check if ws server is running";
+        emit tcpSocketFailed();
     }
+
     connect(socket, &QTcpSocket::connected, this, [this, socket]
     {
         // create the socket wrapper
@@ -37,7 +40,7 @@ void Client::init()
         // You can call ws_wrapper->write(), to send
         // Use the `messagesReady()` or `readyReady()` signal to receive
 
-        // Handling the Failure and Disconned below
+        // Handling the Failure and Disconned below - those are not working yet
         connect(ws_wrapper, &WebSocket::Wrapper::handshakeFailed, this, &Client::handshakeFailed);
         connect(ws_wrapper, &WebSocket::Wrapper::disconnected, this, &Client::failed);
         connect(ws_wrapper,&QTcpSocket::errorOccurred,this, &Client::tcpHandshakeError);
@@ -87,6 +90,7 @@ void Client::error(QAbstractSocket::SocketError socketError)
     qInfo() << Q_FUNC_INFO << QThread::currentThread();
     qInfo() << "socketError:" << socketError << " " << tcp_socket.errorString();
     qInfo() << "socketError - check if ws server is running";
+    emit tcpSocketError();
 }
 
 void Client::clientReadData()
