@@ -17,9 +17,9 @@ int main(int argc, char *argv[])
 
     QThread::currentThread()->setObjectName("Main thread");
 
+    // potentially for future multithread use
     //QThread thread;
     //thread.setObjectName("Client thread");
-
     //Client* client = new Client;
     //client->moveToThread(&thread);
     //thread.start();
@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 
     Client client;
     client.init();
-    //client.sendMsg1();
+    //client.sendMsg1(); // <<<<<- crashes app once uncommented.
 
     //QObject::connect(&client, &Client::failed, &a, [&a]{ a.exit(1); });
 
