@@ -12,4 +12,4 @@ Current WSClient mean to be inegrated into QML under Qt6 and became integrated p
 
 Current caveats:
 1. Unable to send the "configuration command" via ws once ws connection established and running (app crashes). Can possibly be issue with threading.
-2. Unable to capture connection failures. For some reason those does not appear.
+2. Unable to capture ws connection failures. For some reason those does not appear. TCPsocket eroors logging is partially working at thios stage
