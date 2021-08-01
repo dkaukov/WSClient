@@ -37,13 +37,15 @@ void Client::init()
         // You can call ws_wrapper->write(), to send
         // Use the `messagesReady()` or `readyReady()` signal to receive
 
-        // Handling the Failure and Disconned below - those are not working yet
+        // WS Failure and Disconned handling below - those are not working yet
         connect(ws_wrapper, &WebSocket::Wrapper::handshakeFailed, this, &Client::handshakeFailed);
         connect(ws_wrapper, &WebSocket::Wrapper::disconnected, this, &Client::failed);
         connect(ws_wrapper,&QTcpSocket::errorOccurred,this, &Client::tcpHandshakeError);
 
         // Reading data from ws server
         connect(ws_wrapper, &WebSocket::Wrapper::messagesReady, this ,&Client::clientReadData);
+
+        //starting ws connection
         auto res = ws_wrapper->startClientHandshake("/", "localhost");
         if (!res) ws_wrapper->deleteLater();
     });
@@ -58,7 +60,8 @@ void Client::handshakeSucceed()
     qInfo() << Q_FUNC_INFO << QThread::currentThread();
     qDebug() << "ws connected";
     // sends below config message immediately after handshake
-    const QString msg  = QString("volume:-5;");
+    //const QString msg  = QString("volume:-5;");
+    const QString msg  = "volume:-5;";
     ws_wrapper->write(msg.toUtf8());
 
     // seems like I need to create while loop here for further config messages
@@ -108,7 +111,8 @@ void Client::clientReadData()
 
 void Client::sendMsg1(){
     qInfo() << Q_FUNC_INFO << QThread::currentThread();
-    const QString msg  = QString("volume:-10;");
+    //const QString msg  = QString("volume:-10;");
+    const QString msg  = "volume:-10;";
     ws_wrapper->write(msg.toUtf8());
 }
 
