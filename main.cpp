@@ -27,6 +27,11 @@ int main(int argc, char *argv[])
 
     Client client;
     client.init();
+
+    client.connect(&client, &Client::connected, &client, [&client] {
+        client.sendMsg1();
+    });
+    //while (!client.isConnected()) {};
     //client.sendMsg1(); // <<< crashes app when uncommented
 
     //QObject::connect(&client, &Client::failed, &a, [&a]{ a.exit(1); });

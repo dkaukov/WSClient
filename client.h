@@ -23,6 +23,7 @@ signals:
     void failed();
     void tcpSocketFailed();
     void tcpSocketError();
+    void connected();
 
 public slots:
     void sendMsg1();

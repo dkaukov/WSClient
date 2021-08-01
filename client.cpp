@@ -69,6 +69,7 @@ void Client::handshakeSucceed()
     //while (&WebSocket::Wrapper::connected){
     //
     //}
+     emit connected();
 }
 
 void Client::handshakeFailed(const QString & reason)
