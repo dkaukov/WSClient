@@ -15,9 +15,14 @@ Client::~Client()
 void Client::init()
 {
     qInfo() << "starting Init";
-
     // create the to-be-wrapped socket (this is the real socket)
     QTcpSocket *socket = new QTcpSocket(this);
+    connect(socket, &QTcpSocket::errorOccurred,this,&Client::error);
+    if (&QTcpSocket::errorOccurred) {
+        qInfo() << Q_FUNC_INFO << QThread::currentThread();
+        qInfo() << "TcpSocket Error:" << socket->errorString();
+        qInfo() << "TcpSocket Error - check if ws server is running";
+    }
     connect(socket, &QTcpSocket::connected, this, [this, socket]
     {
         // create the socket wrapper
@@ -75,6 +80,13 @@ void Client::tcpHandshakeError(QAbstractSocket::SocketError socketError)
     qInfo() << Q_FUNC_INFO << QThread::currentThread();
     qInfo() << "Error:" << socketError << " " << ws_wrapper->errorString();
     emit failed();
+}
+
+void Client::error(QAbstractSocket::SocketError socketError)
+{
+    qInfo() << Q_FUNC_INFO << QThread::currentThread();
+    qInfo() << "socketError:" << socketError << " " << tcp_socket.errorString();
+    qInfo() << "socketError - check if ws server is running";
 }
 
 void Client::clientReadData()

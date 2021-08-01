@@ -32,7 +32,9 @@ private slots:
     void handshakeFailed(const QString & reason);
     void clientReadData();
     void tcpHandshakeError(QAbstractSocket::SocketError socketError);
+    void error(QAbstractSocket::SocketError socketError);
 
 private:
     WebSocket::Wrapper* ws_wrapper = nullptr;
+    QTcpSocket tcp_socket;
 };
