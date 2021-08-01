@@ -4,7 +4,7 @@ QTCPsocket based Websocket client
 
 Library used came from https://github.com/cculianu/WebSocket
 
-This WSClient is targeted to work with TCI protocol https://github.com/maksimus1210/TCI (TCI uses ws;// on transport layer)
+This WSClient is targeted to work with TCI protocol https://github.com/maksimus1210/TCI (TCI uses ws;//)
 
 This project is the sub of larger project, located here: https://github.com/VK6NX/Remote_ATU
 
