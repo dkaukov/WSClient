@@ -17,15 +17,12 @@ void Client::init()
     qInfo() << "starting Init";
     // create the to-be-wrapped socket (this is the real socket)
     QTcpSocket *socket = new QTcpSocket(this);
-    connect(socket, &QTcpSocket::errorOccurred,this,&Client::error);
-    // below is the duplicate of void Client::error to check if there is any difference
-    if (&QTcpSocket::errorOccurred) {
-        qInfo() << Q_FUNC_INFO << QThread::currentThread();
-        qInfo() << "TcpSocket Error:" << socket->errorString();
-        qInfo() << "TcpSocket Error - check if ws server is running";
-        emit tcpSocketFailed();
-    }
 
+    // TCP socket error and state detection
+    connect(socket,&QTcpSocket::errorOccurred,this,&Client::error);
+    connect(socket,&QTcpSocket::stateChanged,this,&Client::stateChanged);
+
+    // if connected - proceed wuth further setup
     connect(socket, &QTcpSocket::connected, this, [this, socket]
     {
         // create the socket wrapper
@@ -91,6 +88,13 @@ void Client::error(QAbstractSocket::SocketError socketError)
     qInfo() << "socketError:" << socketError << " " << tcp_socket.errorString();
     qInfo() << "socketError - check if ws server is running";
     emit tcpSocketError();
+}
+
+void Client::stateChanged(QAbstractSocket::SocketState socketState)
+{
+    //qInfo() << Q_FUNC_INFO << QThread::currentThread();
+    QMetaEnum metaEnum = QMetaEnum::fromType<QAbstractSocket::SocketState>();
+    qInfo() << "State: " << metaEnum.valueToKey(socketState);
 }
 
 void Client::clientReadData()

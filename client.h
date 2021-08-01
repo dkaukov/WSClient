@@ -35,6 +35,7 @@ private slots:
     void clientReadData();
     void tcpHandshakeError(QAbstractSocket::SocketError socketError);
     void error(QAbstractSocket::SocketError socketError);
+    void stateChanged(QAbstractSocket::SocketState socketState);
 
 private:
     WebSocket::Wrapper* ws_wrapper = nullptr;
